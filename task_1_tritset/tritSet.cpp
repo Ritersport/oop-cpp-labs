@@ -2,25 +2,38 @@
 
 //TritSet
 
+int countAllocLength(int capacity) {
+    int allocLength = ((capacity * 2 + 8) / 8 + sizeof(unsigned int) - 1) / sizeof(unsigned int);
+
+    return allocLength;
+}
+
 //CONSTRUCTOR
 TritSet::TritSet(int capacity) {
     this->capacity = capacity;
-    int allocLength = ceil((capacity * 2) / 8.0);
-    allocLength = ceil(allocLength / sizeof(unsigned int)) + 1;
-    for (int i = 0; i < allocLength; i++) {
+    int allocLength = countAllocLength(capacity);
+    for (int i = 0; i < allocLength; i++) 
         this->set.push_back(0);
-    }
-
 }
+
+
+TritSet::TritSet(const TritSet& set)
+{
+    capacity = set.capacity;
+    int allocLength = countAllocLength(this->capacity);
+    for (int i = 0; i < allocLength; i++)
+        this->set.push_back(0);
+    for (int i = 0; i < capacity; i++)
+        this->setTrit(i, set[i]);
+}
+
 
 //SETTER
 void TritSet::setTrit(int index, TritValue value) {
 
     unsigned int bitOfVector = index * 2;
-    unsigned int byteOfVector = bitOfVector / 8;
-    unsigned int idxOfVector = byteOfVector / sizeof(unsigned int);
+    unsigned int idxOfVector = countAllocLength(index) - 1;
     unsigned int bitOfCell = bitOfVector % (8 * sizeof(unsigned int));
-
 
     //if size of the vector is less then we need
     //we pushback new cells or call return if value == Unknown
@@ -68,7 +81,6 @@ void TritSet::setTrit(int index, TritValue value) {
         mask = 3; //0000..011
         for (auto i = 0; i < (8 * sizeof(unsigned int)) - 2 - bitOfCell; i++) {
             mask <<= 1;
-            mask1 <<= 1;
         }
         this->set[idxOfVector] |= mask;
         return;
@@ -80,15 +92,16 @@ void TritSet::setTrit(int index, TritValue value) {
 void TritSet::setCapacity(int capacity)
 {
     this->capacity = capacity;
+    int allocLength = countAllocLength(capacity);
+    for (int i = 0; i < allocLength; i++)
+        this->set.push_back(0);
 }
 
 //GETTERS
 TritValue TritSet::getTrit(int index) const {
     unsigned int bitOfVector = index * 2;
-    unsigned int byteOfVector = bitOfVector / 8;
-    unsigned int idxOfVector = byteOfVector / sizeof(unsigned int);
+    unsigned int idxOfVector = countAllocLength(index) - 1;
     unsigned int bitOfCell = bitOfVector % (8 * sizeof(unsigned int));
-
 
     if (idxOfVector > this->set.capacity() - 1)
         return Unknown;
@@ -98,10 +111,18 @@ TritValue TritSet::getTrit(int index) const {
         mask >>= 1;
     }
     switch (mask % 4) {
-    case 0: return Unknown;
-    case 1: return True;
-    case 3: return False;
-
+    case 0: {
+        return Unknown;
+        break;
+    }
+    case 1: {
+        return True;
+        break;
+    }
+    case 3: {
+        return False;
+        break;
+    }
     }
     return Unknown;
 }
@@ -160,16 +181,15 @@ TritSet TritSet::operator&(const TritSet& trit) {
             break;
         }
     }
-
     return newTrit;
 }
 
 TritSet TritSet::operator|(const TritSet& trit) {
-    TritSet firstTrit = *this;
+    TritSet firstTrit = *this; 
     TritSet secondTrit = trit;
     TritSet newTrit = TritSet((firstTrit.capacity > secondTrit.capacity) ? firstTrit.capacity : secondTrit.capacity);
 
-
+    
     for (auto i = 0; i < newTrit.capacity; i++) {
         switch (firstTrit.getTrit(i)) {
         case True:
@@ -190,14 +210,10 @@ TritSet TritSet::operator|(const TritSet& trit) {
 }
 
 TritValue TritSet::operator[](const int index) const {
-    //getter
-
     return this->getTrit(index);
 }
 
-TritReference TritSet::operator [](const int index) {
-    //setter
-
+TritReference TritSet::operator[](const int index) {
     TritReference ref(index, this);
     return ref;
 }
@@ -210,35 +226,21 @@ size_t TritSet::cardinality(TritValue value) {
         if (this->getTrit(i) == value)
             counter++;
     }
-
     return counter;
 }
 
 void TritSet::trim(size_t lastIndex) {
-    unsigned int bitOfVector = lastIndex * 2;
-    unsigned int byteOfVector = bitOfVector / 8;
-    unsigned int idxOfVector = byteOfVector / sizeof(unsigned int);
+    unsigned int idxOfVector = countAllocLength(lastIndex);
 
-
+   // for (int i = lastIndex; i < 8 * sizeof(unsigned) * (idxOfVector + 1); i++)
+   //     this->setTrit(i, Unknown);
     for (unsigned i = idxOfVector + 1; i < this->set.size(); i++) {
         this->set.pop_back();
     }
-    for (int i = lastIndex; i < 8 * sizeof(unsigned) * (idxOfVector + 1); i++)
-        this->setTrit(i, Unknown);
-    this->capacity = lastIndex;
-    while (this->getTrit(this->capacity - 1) == Unknown)
-        this->capacity--;
-}
-
-void TritSet::printTritSet() {
-    for (int i = 0; i < this->capacity; i++)
-        std::cout << this->getTrit(i) << " ";
-    std::cout << std::endl;
+    this->capacity = lastIndex + 1;
 }
 
 
-
-/////////////////
 
 //TritReference
 
@@ -246,6 +248,10 @@ void TritSet::printTritSet() {
 TritReference::TritReference(int index, TritSet* set) {
     this->index = index;
     this->set = set;
+}
+
+TritReference::~TritReference()
+{
 }
 
 //SETTERS
@@ -257,6 +263,12 @@ void TritReference::setIndex(int idx) {
     this->index = idx;
 }
 
+TritValue TritReference::getTrit() const
+{
+    TritValue value = this->set->getTrit(this->index);
+    return value;
+}
+
 //OPERATORS
 TritReference& TritReference::operator = (TritValue value) {
     this->set->setTrit(this->index, value);
@@ -266,11 +278,16 @@ TritReference& TritReference::operator = (TritValue value) {
 
 TritReference& TritReference::operator = (const TritReference& value) {
     this->set->setTrit(this->index, (TritValue)value);
-
     return *this;
 }
 
 TritReference::operator TritValue() const {
-    return this->set->getTrit(this->index);;
+    return this->set->getTrit(this->index);
 }
 
+std::ostream& operator<<(std::ostream& out, const TritReference& ref)
+{
+    TritValue value = ref.getTrit();
+    out << value;
+    return out;
+}
