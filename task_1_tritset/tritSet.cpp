@@ -37,7 +37,7 @@ void TritSet::setTrit(int index, TritValue value) {
 
     //if size of the vector is less then we need
     //we pushback new cells or call return if value == Unknown
-    if (index > this->capacity - 1) {
+    if (index >= this->capacity) {
         if (value != Unknown) {
             int difference = idxOfVector - this->set.size() + 1;
             for (int i = 0; i < difference; i++) {
@@ -103,7 +103,7 @@ TritValue TritSet::getTrit(int index) const {
     unsigned int idxOfVector = countAllocLength(index) - 1;
     unsigned int bitOfCell = bitOfVector % (8 * sizeof(unsigned int));
 
-    if (idxOfVector > this->set.capacity() - 1)
+    if (idxOfVector >= this->set.capacity())
         return Unknown;
     unsigned mask = 0;
     mask = mask | this->set[idxOfVector];
@@ -232,8 +232,6 @@ size_t TritSet::cardinality(TritValue value) {
 void TritSet::trim(size_t lastIndex) {
     unsigned int idxOfVector = countAllocLength(lastIndex);
 
-   // for (int i = lastIndex; i < 8 * sizeof(unsigned) * (idxOfVector + 1); i++)
-   //     this->setTrit(i, Unknown);
     for (unsigned i = idxOfVector + 1; i < this->set.size(); i++) {
         this->set.pop_back();
     }
