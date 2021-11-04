@@ -4,7 +4,7 @@
 
 #include "ReadFileBlock.h"
 
-class WriteFileBlock : public Worker
+class WriteFileBlock : public IWorker
 {
 	virtual void work(std::vector <std::string> arguments, std::string* text);
 

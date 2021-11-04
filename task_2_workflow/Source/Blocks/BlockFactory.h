@@ -25,6 +25,6 @@ public:
 
 	void registr(std::string blockName, IBlockMaker* maker);
 
-	Worker* createBlock(std::string blockName);
+	IWorker* createBlock(std::string blockName);
 };
 

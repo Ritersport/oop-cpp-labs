@@ -10,7 +10,7 @@ public:
 		BlockFactory::Instance()->registr(blockName, this);
 	}
 
-	virtual Worker* create() const{
+	virtual IWorker* create() const{
 		return new T();
 	}
 

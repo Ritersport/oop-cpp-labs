@@ -2,7 +2,7 @@
 
 #include "SortBlock.h"
 
-class ReplaceBlock : public Worker
+class ReplaceBlock : public IWorker
 {
 public:
 	virtual void work(std::vector <std::string> arguments, std::string* text);

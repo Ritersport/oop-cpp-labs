@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Worker.h"
+#include "IWorker.h"
 
 class IBlockMaker {
 public:
-	virtual Worker* create() const = 0;
+	virtual IWorker* create() const = 0;
 };
 

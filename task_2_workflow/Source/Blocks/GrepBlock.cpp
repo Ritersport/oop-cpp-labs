@@ -18,7 +18,7 @@ void GrepBlock::work(std::vector <std::string> arguments, std::string* text)
     while ((strBeginning != strEnding + 1) && (wordBeginning != -1) && (strEnding != -1))
     {
 
-        if ((wordBeginning > strBeginning) && (wordBeginning < strEnding)) {
+        if ((wordBeginning >= strBeginning) && (wordBeginning < strEnding)) {
 
             localWordCount++;
             int length = strEnding - strBeginning + 1;

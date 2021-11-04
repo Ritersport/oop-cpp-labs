@@ -20,7 +20,7 @@ void SortBlock::work(std::vector <std::string> arguments, std::string* text)
     }
     std::sort(strs.begin(), strs.end());
     for (auto i = 0; i != strs.size(); i++) {
-        *newText = *newText + strs[i];
+        *newText += strs[i];
     }
     *text = *newText;
 }

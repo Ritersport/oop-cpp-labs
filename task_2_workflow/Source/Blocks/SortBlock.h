@@ -4,7 +4,7 @@
 
 #include "GrepBlock.h"
 
-class SortBlock : public Worker
+class SortBlock : public IWorker
 {
 public:
 	virtual void work(std::vector <std::string> arguments, std::string* text);

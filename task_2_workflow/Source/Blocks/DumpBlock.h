@@ -4,7 +4,7 @@
 
 #include "ReplaceBlock.h"
 
-class DumpBlock : public Worker
+class DumpBlock : public IWorker
 {
 public:
 	virtual void work(std::vector <std::string> arguments, std::string* text);

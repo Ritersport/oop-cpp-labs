@@ -4,7 +4,7 @@
 
 #include "BlockMaker.h"
 
-class ReadFileBlock : public Worker
+class ReadFileBlock : public IWorker
 {
 public:
 	virtual void work(std::vector <std::string> arguments, std::string* text);
