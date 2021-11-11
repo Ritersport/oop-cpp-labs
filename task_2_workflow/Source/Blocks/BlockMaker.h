@@ -14,6 +14,7 @@ public:
 		return new T();
 	}
 
+	virtual ~BlockMaker() = default;
 
 };
 

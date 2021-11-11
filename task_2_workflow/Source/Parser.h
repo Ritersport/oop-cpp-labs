@@ -14,5 +14,6 @@ public:
 	std::map <int, std::vector <std::string>> blocks;
 
 	std::map <int, std::vector <std::string>> parse(std::string schemeFilename);
+
 };
 

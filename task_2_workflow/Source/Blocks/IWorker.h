@@ -16,6 +16,8 @@ public:
 	virtual int getNumOfParams() = 0;
 
 	virtual BLOCK_TYPE getTypeOfBlock() = 0;
+
+	virtual ~IWorker() = default;
 	
 };
 

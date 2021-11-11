@@ -1,7 +1,7 @@
 desc
 1 = replace tonight tomorrow
 8 = replace Tonight Tomorrow
-2 = grep young
+2 = grep We
 3 = sort
 0 = readfile text.txt
 5 = writefile out.txt

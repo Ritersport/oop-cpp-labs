@@ -9,5 +9,7 @@ public:
 	virtual int getNumOfParams();
 
 	virtual BLOCK_TYPE getTypeOfBlock();
+
+	virtual ~GrepBlock() = default;
 };
 

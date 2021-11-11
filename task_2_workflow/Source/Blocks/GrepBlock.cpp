@@ -36,6 +36,7 @@ void GrepBlock::work(std::vector <std::string> arguments, std::string* text)
         }
     }
     *text = *newText;
+    delete newText;
 }
 
 int GrepBlock::getNumOfParams()

@@ -11,5 +11,7 @@ class WriteFileBlock : public IWorker
 	virtual int getNumOfParams();
 
 	virtual BLOCK_TYPE getTypeOfBlock();
+
+	virtual ~WriteFileBlock() = default;
 };
 

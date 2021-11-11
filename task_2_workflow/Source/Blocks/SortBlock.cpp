@@ -23,6 +23,7 @@ void SortBlock::work(std::vector <std::string> arguments, std::string* text)
         *newText += strs[i];
     }
     *text = *newText;
+    delete newText;
 }
 
 int SortBlock::getNumOfParams()

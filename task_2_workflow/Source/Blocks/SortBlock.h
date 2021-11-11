@@ -12,5 +12,7 @@ public:
 	virtual int getNumOfParams();
 
 	virtual BLOCK_TYPE getTypeOfBlock();
+
+	virtual ~SortBlock() = default;
 };
 
